@@ -35,7 +35,7 @@ pipeline {
             steps {
                 echo 'Deploying....'
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'DOCKER-USERPASS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'DOCKER_USERPASS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                         sh 'echo $PROJECT_NAME - $PROJECT_VERSION '
 
