@@ -15,11 +15,13 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing..'
+                sh 'gradle test'
             }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+                sh 'gradle bootBuildImage'
             }
         }
     }
