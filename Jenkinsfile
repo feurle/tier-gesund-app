@@ -5,16 +5,14 @@ pipeline {
         jdk 'jdk-21'
         gradle 'gradle-8.8'
     }
-    environment {
-        PROJECT_NAME = ''
-    }
     stages {
-        stage('Read Properties') {
+        stage('Prepare') {
             steps {
                 script {
                     def props = readProperties file: 'gradle.properties'
                     env.PROJECT_NAME = props.projectName
                     env.PROJECT_VERSION = props.projectVersion
+                    env.DOCKER_URL = props.dockerUrl
                 }
             }
         }
@@ -37,7 +35,7 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'DOCKER_USERPASS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
-                        sh 'echo $PROJECT_NAME - $PROJECT_VERSION '
+                        sh 'echo $DOCKER_URL/$PROJECT_NAME:$PROJECT_VERSION'
 
                     }
 

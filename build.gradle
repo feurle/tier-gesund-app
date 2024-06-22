@@ -40,7 +40,7 @@ tasks.named('test') {
 }
 
 tasks.named("bootBuildImage") {
-    imageName = "docker.io/feurle/${project.name}:${project.version}"
+    imageName = "${dockerUrl}/${projectName}:${projectVersion}"
 }
 
 jacocoTestReport {
