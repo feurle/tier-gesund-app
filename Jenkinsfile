@@ -1,7 +1,7 @@
 pipeline {
 
-    node {
-      jdk = tool name: 'jdk-21'
+    tools {
+      jdk 'jdk-21'
       env.JAVA_HOME = "${jdk}"
 
       echo "jdk installation path is: ${jdk}"
