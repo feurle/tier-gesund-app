@@ -13,7 +13,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh './gradlew clean bootBuildImage'
+                sh 'gradle clean bootBuildImage'
             }
         }
         stage('Test') {
