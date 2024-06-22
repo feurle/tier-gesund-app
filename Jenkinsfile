@@ -1,9 +1,9 @@
 pipeline {
-    options {
-        ansiColor('xterm')
-    }
-    agent any
 
+    agent any
+    tools {
+        gradle 'gradle-8.8'
+    }
     stages {
          stage('Info') {
             steps {
@@ -15,6 +15,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building..'
+                sh 'gradle build'
             }
         }
         stage('Test') {
