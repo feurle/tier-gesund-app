@@ -8,6 +8,8 @@ pipeline {
          stage('Info') {
             steps {
                 echo "The build number is ${env.BUILD_NUMBER}"
+                echo "JAVA_HOME ${env.JAVA_HOME}"
+                echo "GRADLE_HOME is ${env.GRADLE_HOME}"
             }
         }
         stage('Build') {
