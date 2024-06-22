@@ -5,11 +5,20 @@ pipeline {
         jdk 'jdk-21'
         gradle 'gradle-8.8'
     }
+    environment {
+
+    }
     stages {
+        stage('Read Properties') {
+            def props = readProperties file: 'gradle.properties'
+            env.PROJECT_NAME = props.projectName
+            env.PROJECT_VERSION = props.projectVersion
+        }
+
         stage('Build') {
             steps {
                 echo 'Building..'
-                sh 'gradle build'
+                sh 'gradle build bootBuildImage'
             }
         }
         stage('Test') {
@@ -18,10 +27,17 @@ pipeline {
                 sh 'gradle test'
             }
         }
-        stage('Deploy') {
+        stage('Deploy Image') {
             steps {
                 echo 'Deploying....'
-                sh 'gradle bootBuildImage'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'DOCKER-USERPASS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        sh 'docker login -u $USERNAME -p $PASSWORD'
+                        sh 'echo $PROJECT_NAME - $PROJECT_VERSION '
+
+                    }
+
+                }
             }
         }
     }
