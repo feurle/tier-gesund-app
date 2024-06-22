@@ -6,7 +6,7 @@ pipeline {
         gradle 'gradle-8.8'
     }
     environment {
-
+        PROJECT_NAME
     }
     stages {
         stage('Read Properties') {
