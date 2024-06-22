@@ -10,9 +10,11 @@ pipeline {
     }
     stages {
         stage('Read Properties') {
-            def props = readProperties file: 'gradle.properties'
-            env.PROJECT_NAME = props.projectName
-            env.PROJECT_VERSION = props.projectVersion
+            script {
+                def props = readProperties file: 'gradle.properties'
+                env.PROJECT_NAME = props.projectName
+                env.PROJECT_VERSION = props.projectVersion
+            }
         }
 
         stage('Build') {
