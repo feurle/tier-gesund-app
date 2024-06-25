@@ -36,9 +36,9 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'DOCKER_USERPASS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
-                        sh 'docker push $DOCKER_URL/$PROJECT_NAME:$PROJECT_VERSION'
+                        sh 'docker push $DOCKER_URL/$DOCKER_ORG/$PROJECT_NAME:$PROJECT_VERSION'
                         sh 'docker tag  $DOCKER_ORG/$PROJECT_NAME:$PROJECT_VERSION $DOCKER_URL/$DOCKER_ORG/$PROJECT_NAME:latest'
-                        sh 'docker push $DOCKER_URL/$PROJECT_NAME:latest'
+                        sh 'docker push $DOCKER_URL/$DOCKER_ORG/$PROJECT_NAME:latest'
                     }
                 }
             }
