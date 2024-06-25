@@ -6,7 +6,7 @@ pipeline {
         gradle 'gradle-8.8'
     }
     stages {
-        stage('Prepare') {
+        stage('Prepare ...') {
             steps {
                 script {
                     def props = readProperties file: 'gradle.properties'
@@ -17,26 +17,36 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Building ...') {
             steps {
-                echo 'Building..'
+                echo 'Build Java artefact and container image'
                 sh 'gradle build bootBuildImage'
             }
         }
-        stage('Test') {
+        stage('Testing ...') {
             steps {
                 echo 'Testing..'
                 sh 'gradle test'
             }
         }
-        stage('Deploy Image') {
+        stage('Deploying ...') {
             steps {
-                echo 'Deploying....'
+                echo 'Push container image to Docker'
                 script {
                     withCredentials([usernamePassword(credentialsId: 'DOCKER_USERPASS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                         sh 'docker push $DOCKER_URL/$PROJECT_NAME:$PROJECT_VERSION'
+                        sh 'docker push $DOCKER_URL/$PROJECT_NAME:latest'
                     }
+                }
+            }
+        }
+        stage('Cleanup Image') {
+            steps {
+                echo 'Remove unused container images'
+                script {
+                    sh 'docker rmi $DOCKER_URL/$PROJECT_NAME:$PROJECT_VERSION'
+                    sh 'docker rmi $DOCKER_URL/$PROJECT_NAME:latest'
                 }
             }
         }
