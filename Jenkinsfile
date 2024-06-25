@@ -13,6 +13,7 @@ pipeline {
                     env.PROJECT_NAME = props.projectName
                     env.PROJECT_VERSION = props.projectVersion
                     env.DOCKER_URL = props.dockerUrl
+                    env.DOCKER_ORG = props.dockerOrg
                 }
             }
         }
@@ -36,6 +37,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'DOCKER_USERPASS', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                         sh 'docker login -u $USERNAME -p $PASSWORD'
                         sh 'docker push $DOCKER_URL/$PROJECT_NAME:$PROJECT_VERSION'
+                        sh 'docker tag  $DOCKER_ORG/$PROJECT_NAME:$PROJECT_VERSION $DOCKER_URL/$DOCKER_ORG/$PROJECT_NAME:latest'
                         sh 'docker push $DOCKER_URL/$PROJECT_NAME:latest'
                     }
                 }
@@ -45,8 +47,8 @@ pipeline {
             steps {
                 echo 'Remove unused container images'
                 script {
-                    sh 'docker rmi $DOCKER_URL/$PROJECT_NAME:$PROJECT_VERSION'
-                    sh 'docker rmi $DOCKER_URL/$PROJECT_NAME:latest'
+                    sh 'docker rmi $DOCKER_URL/$DOCKER_ORG/$PROJECT_NAME:$PROJECT_VERSION'
+                    sh 'docker rmi $DOCKER_URL/$DOCKER_ORG/$PROJECT_NAME:latest'
                 }
             }
         }
